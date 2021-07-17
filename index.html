@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<link
+			rel="stylesheet"
+			href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+		/>
+		<link rel="stylesheet" href="styles.css" />
+		<link
+			href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css"
+			rel="stylesheet"
+			integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1"
+			crossorigin="anonymous"
+		/>
+		<script src="global.js" defer></script>
+		<script src="vector.js" defer></script>
+		<script src="classes.js" defer></script>
+		<script src="index.js" defer></script>
+		<title>Foosball</title>
+	</head>
+	<body>
+		<h3>Foosball Live</h3>
+		<div class="menu">
+			<button class="btn btn-sm btn-dark">How to play</button>
+		</div>
+		<div class="game page">
+			<h3 class="result"></h3>
+			<div style="background-color: rgb(0 0 255 / 60%)" class="score P1"></div>
+			<div class="canvas-container position-relative">
+				<canvas class="position-absolute" id="bg"></canvas>
+				<canvas class="position-absolute" id="canvas"></canvas>
+			</div>
+			<div style="background-color: rgb(255 0 0 / 60%)" class="score P2"></div>
+		</div>
+		<div class="howto container page d-none">
+			<h3 class="text-start">Basic info:</h3>
+			<ul>
+				<li>This is foosball (table football) tried on html canvas.</li>
+				<li>
+					Each side got 3 handles containing 5 mid players, 3 on defense and 1
+					goalkeeper.
+				</li>
+				<li>
+					After every goal, the ball is re-placed at gk of goal conceding team
+				</li>
+				<li>First side to score 10 goals wins, then match restarts.</li>
+				<li>
+					Single player is basically practice mode, where both sides have to be
+					controlled. Main target is creating the live multiplayer version
+				</li>
+			</ul>
+			<h3 class="text-start">Control:</h3>
+			<ul>
+				<li>
+					Handle actions activate when cursor is close enough to the handle
+				</li>
+				<li>Rotate wheel to move handles</li>
+				<li>Left click towards opponent goal to kick ball</li>
+				<li>Left click towards own post to backpass</li>
+				<li>Holding right button let the ball go underneath player</li>
+				<li>Click wheel at right moment to hold ball using adjacent player</li>
+				<li>While holding, rotate to move with the ball</li>
+			</ul>
+			<p>
+				Hello, this is <a href="https://fayeazahmed.github.io/">Ahmed</a>. I
+				thought of building
+				<a href="https://www.github.com">this project</a> while trying to learn
+				HTML Canvas. This is also the first project where I commented everything
+				out properly so that anyone can understand whatever's happening
+				wherever.<br />
+				So basically there are two canvases. One is for drawing the background
+				field only. Used this extra canvas so that the whole field doesn't have
+				to be drawn at every render. Another canvas holds the actual dynamic
+				game objects like handle, players and the ball. The movements were
+				tracked in the 2d coordinate using
+				<a href="https://joshbradley.me/object-collisions-with-canvas/"
+					>Vector class</a
+				>. This is the simplified version of what's happening in the game loop-
+				Ball is constantly getting redrawn on current position and position is
+				changing according to velocity. Ball direction and velocity changes when
+				collided with other player or border according to handle state
+				(leave/kick etc). If ball goes through any goal line, score is updated
+				and everything is redrawn if a player scores ten.
+			</p>
+		</div>
+	</body>
+</html>
