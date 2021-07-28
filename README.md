@@ -10,7 +10,11 @@
 <li>After every goal, the ball is re-placed at gk of goal conceding team</li>
 
 <li>First side to score 10 goals wins, then match restarts.</li>
+
 <li>Single player is basically practice mode, where both sides have to becontrolled. Main target is creating the live multiplayer version</li>
+
+<li>For multiplayer, enter your name and your position will be shown.</li>
+
 </ul>
 
 ## Control:

@@ -16,6 +16,13 @@
 		/>
 		<script src="global.js" defer></script>
 		<script src="vector.js" defer></script>
+		<script
+			src="https://cdn.socket.io/4.1.2/socket.io.min.js"
+			integrity="sha384-toS6mmwu70G0fw54EGlWWeA4z3dyJ+dlXBtSURSKN4vyRFOcxd3Bzjj/AoOwY+Rg"
+			crossorigin="anonymous"
+			defer
+		></script>
+		<script src="socket.js" defer></script>
 		<script src="classes.js" defer></script>
 		<script src="index.js" defer></script>
 		<title>Foosball</title>
@@ -23,7 +30,8 @@
 	<body>
 		<h3>Foosball Live</h3>
 		<div class="menu">
-			<button class="btn btn-sm btn-dark">How to play</button>
+			<button class="btn btn-sm btn-dark me-2">How to play</button>
+			<input type="text" placeholder="Enter name for multiplayer" />
 		</div>
 		<div class="game page">
 			<h3 class="result"></h3>
@@ -31,6 +39,7 @@
 			<div class="canvas-container position-relative">
 				<canvas class="position-absolute" id="bg"></canvas>
 				<canvas class="position-absolute" id="canvas"></canvas>
+				<div class="mp-info"></div>
 			</div>
 			<div style="background-color: rgb(255 0 0 / 60%)" class="score P2"></div>
 		</div>
@@ -43,12 +52,30 @@
 					goalkeeper.
 				</li>
 				<li>
-					After every goal, the ball is re-placed at gk of goal conceding team
+					After every goal, the ball is re-placed at mid of conceding team
 				</li>
 				<li>First side to score 10 goals wins, then match restarts.</li>
 				<li>
 					Single player is basically practice mode, where both sides have to be
-					controlled. Main target is creating the live multiplayer version
+					controlled. Main target was creating the live multiplayer version
+				</li>
+				<li>
+					For multiplayer, enter your name and your position will be shown.
+					<span style="color: blue">1- Blue [Left]</span>,
+					<span style="color: red">2- Red [Right]</span>,
+					<span style="color: grey">above- stand by and watch the match</span>
+					(until I implement rooms) :v
+				</li>
+				<li>
+					I found a bug in multiplayer that sometimes there are two balls moving
+					around concurrently. I'm not sure at which moment it gets unsynced.
+					Well, you have a double chance of scoring for few moments, I guess
+					it's a feature xD
+				</li>
+				<li>
+					Another bug is the handle positions don't get synced accurately all
+					the time, but I think it's because of the slow req and response time
+					of the free servers used to deploy it.
 				</li>
 			</ul>
 			<h3 class="text-start">Control:</h3>

@@ -1,65 +1,92 @@
-@import url('https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=STIX+Two+Math&display=swap");
 
 * {
-    margin: 0;
-    padding: 0;
-    text-align: center;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+	box-sizing: border-box;
 }
 
 canvas {
-  top: 0;
-  left: 0;
+	top: 0;
+	left: 0;
 }
 
 canvas:nth-child(1) {
-  background-color: #347b46e3;
+	background-color: #347b46e3;
 }
 
 .score {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
+	width: 100%;
+	display: flex;
+	justify-content: space-between;
 }
 
-.score  .ball {
-  height: 25px;
-  width: 25px;
-  border-radius: 50%;
-  background-color: white;
+.score .ball {
+	height: 25px;
+	width: 25px;
+	border-radius: 50%;
+	background-color: white;
 }
 
 .result {
-  visibility: hidden;
-  font-family: 'STIX Two Math', serif;
-  background-color: rgb(147 255 180);
-  margin: 0;
-  padding: 10px;
-  margin-top: 12px;
-  height: 53px;
+	visibility: hidden;
+	font-family: "STIX Two Math", serif;
+	background-color: rgb(147 255 180);
+	margin: 0;
+	padding: 10px;
+	margin-top: 12px;
+	height: 53px;
+}
+
+.menu {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.menu input {
+	text-align: left;
+	min-width: 200px;
+	padding: 1px;
+}
+
+.mp-info {
+	position: absolute;
+	right: 50px;
+	top: -150px;
+	display: none;
+	max-width: 300px;
+}
+
+.mp-info p {
+	text-align: left;
+	margin: 0 10px;
+	font-size: 16px;
 }
 
 .howto li {
-  list-style: "- ";
-  text-align: left;  
-  font-family: 'STIX Two Math', serif;
-  font-size: 21px;
+	list-style: "- ";
+	text-align: left;
+	font-family: "STIX Two Math", serif;
+	font-size: 21px;
 }
 
 .howto p {
-    font-family: monospace;
-    font-size: 23px;
-    text-align: left;
+	font-family: monospace;
+	font-size: 23px;
+	text-align: left;
 }
 
 .howto a {
-  text-decoration: none;
+	text-decoration: none;
 }
 
-h1, p {
-  font-size: 25px
+h1,
+p {
+	font-size: 25px;
 }
 
 .btn:focus {
-  box-shadow: none !important;
+	box-shadow: none !important;
 }

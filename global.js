@@ -21,7 +21,9 @@ let SCORE = {
     "P1" : 0,
     "P2" : 0
 }
+let multiplayerPosition;
 
-//////////////////////
+// Other dom objects
 const howToBtn = document.querySelector(".menu button")
 howToBtn.addEventListener("click", () => document.querySelectorAll(".page").forEach(page => page.classList.toggle("d-none")))
+const MP_INFO = document.querySelector(".mp-info")

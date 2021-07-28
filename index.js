@@ -108,7 +108,9 @@ canvas.addEventListener("mousemove", e => CURSOR_X = e.offsetX)
 // Change state of nearby handle to kick or backpass
 canvas.addEventListener("mousedown", (e) => {
     const handle = HANDLES[mousePositionInField()]
-    if(handle)
+    if(!handle)
+        return
+    if(!multiplayerPosition || hasControlPermission(handle))
         if(e.button === 0) {
             if(handle.side === 'L')
                 handle.state = CURSOR_X > handle.x ? "kick" : "backpass"
@@ -116,9 +118,12 @@ canvas.addEventListener("mousedown", (e) => {
                 handle.state = CURSOR_X < handle.x ? "kick" : "backpass"
         } else if(e.button === 2)
             handle.state = "leave"
-        else {
+        else
             handle.state = "hold"
-        }
+    else
+        return
+    if(multiplayerPosition)
+        socket.emit("updateHandleState", mousePositionInField(), handle.state)
 })
 
 // Prevent default action of right click
@@ -127,17 +132,34 @@ canvas.addEventListener("contextmenu", e => e.preventDefault())
 // Return handle to default state
 canvas.addEventListener("mouseup", () => {
     const handle = HANDLES[mousePositionInField()]
-    if(handle)
+    if(!handle)
+        return
+    if(!multiplayerPosition || hasControlPermission(handle))
         handle.state = "default"
+    else
+        return
+    if(multiplayerPosition)
+        socket.emit("updateHandleState", mousePositionInField(), handle.state)
 })
 
 // Move player based on wheel rotation and cursor position
 canvas.addEventListener('wheel', (e) => {
-    const players = HANDLES[mousePositionInField()]?.players
-    if(players)
+    const handle = HANDLES[mousePositionInField()]
+    if(!handle)
+        return
+    const players = handle.players
+    const direction = e.deltaY > 0 ? "down" : "up"
+    if(!multiplayerPosition || hasControlPermission(handle))
         for(let i = 0; i < players.length; i++)
-            players[i].move(e.deltaY > 0 ? "down" : "up")
+            players[i].move(direction)
+    if(multiplayerPosition)
+        socket.emit("updateHandle", (players[0].side + players[0].tacticalPos), direction)
 })
+
+// Check if player has permission to control handle in multiplayer
+function hasControlPermission(handle) {
+    return (handle.players[0].side + handle.players[0].tacticalPos) === multiplayerPosition
+}
 
 // Calling requestAnimationFrame here
 function startGameLoop() {
@@ -190,6 +212,7 @@ function placeScoreBoard() {
 
 // Remove one ball from start and place in end
 function changeScore(scorer) {
+    SCORE[scorer]++
     const scoreBoard = document.getElementsByClassName(scorer)[0]
     const start = scoreBoard.querySelector(".start")
     start.removeChild(start.lastChild)
@@ -210,3 +233,6 @@ function finishGame(winnerSide, color) {
     placeScoreBoard()
     setTimeout(() => result.style.visibility = "hidden", 5000)
 }
+
+// Open socket to server for MULTIPLAYER mode
+playerName.addEventListener("keydown", e => e.key === "Enter" && playerName.value.length > 0 && startRoom())

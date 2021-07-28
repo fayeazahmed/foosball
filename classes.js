@@ -74,7 +74,7 @@ class Player {
 class Ball {
     constructor() {
         this.radius = 12
-        this.position = new Vector(WIDTH / 20 + this.radius / 2, HEIGHT / 2)
+        this.position = new Vector(WIDTH / 3 + this.radius / 2, HEIGHT / 2)
         this.velocity = new Vector(0, 0)
     }
 
@@ -90,14 +90,20 @@ class Ball {
         // Checking if ball hit border of table
         if (this.position.y + this.radius >= HEIGHT || this.position.y - this.radius <= 0)
           this.velocity = new Vector(this.velocity.x, -this.velocity.y);
-        if (this.position.x + this.radius >= WIDTH || this.position.x - this.radius <= 0) {
+        if (this.position.x + this.radius >= WIDTH || this.position.x - this.radius <= 0)
             if((this.position.y + this.radius) > GOAL_Y1 && (this.position.y + this.radius) < GOAL_Y2)
                 this.updateScore()
             else
                 this.velocity = new Vector(-this.velocity.x, this.velocity.y);
-        }
         
         this.position = this.position.add(this.velocity)
+        if(multiplayerPosition) {
+            socket.on("updates", (p, v) => {
+                this.position = new Vector(p.x, p.y)
+                this.velocity = new Vector(v.x, v.y)
+            })
+            socket.emit("updates", this.position, this.velocity)
+        }
         this.draw()
     }
 
@@ -117,14 +123,14 @@ class Ball {
                     case "kick": // Get +20 velocity towards opposite goal bar
                         if((player.side === 'L' && this.position.x > player.position.x) || (player.side === 'R' && this.position.x < player.position.x))
                             this.velocity = this.velocityTowardsGoal(player.side)
-                            return
+                        return
                     case "leave": // Ignore collision (ball will go underneath)
                         return
                     case "hold": // Attach ball to player if close enough
                         if((player.side === 'L' && this.position.x < (player.position.x + player.radius)) || (player.side === 'R' && this.position.x > (player.position.x - player.radius)))
                             this.velocity = new Vector(0, 0)
                             this.position = new Vector(this.position.x, player.position.y)
-                            break
+                        break
                     case "backpass": // Get +5 velocity towards self goal bar
                         if(player.side === 'L' && this.position.x < player.position.x)
                             this.velocity = new Vector(-5, 0)
@@ -148,20 +154,13 @@ class Ball {
 
     // Confirm goal and re-place the ball
     updateScore() {
-        if(this.position.x < WIDTH / 2) {
-            SCORE["P2"]++
-            this.position = new Vector(WIDTH / 20 + this.radius / 2, HEIGHT / 2)
-            changeScore("P2")
-        }
-        else {
-            SCORE["P1"]++
-            this.position = new Vector(WIDTH - WIDTH / 20 - this.radius / 2, HEIGHT / 2)
-            changeScore("P1")
-        }
+        const scorer = this.position.x < WIDTH / 2 ? "P2" : "P1"
+        this.position = new Vector(this.position.x < WIDTH / 2 ? WIDTH / 3 + this.radius / 2 : WIDTH - WIDTH / 3 - this.radius / 2, HEIGHT / 2)
+        changeScore(scorer)
+        if(multiplayerPosition)
+            socket.emit("scorer", scorer)
         this.velocity = new Vector(0, 0)
-        if(SCORE["P1"] === 10)
-            finishGame("P1 [LEFT]", "blue")
-        if(SCORE["P2"] === 10)
-            finishGame("P2 [RIGHT]", "red")
+        SCORE["P1"] === 10 && finishGame("P1 [LEFT]", "blue") && socket.emit("finishGame", "P1 [LEFT]", "blue")
+        SCORE["P2"] === 10 && finishGame("P2 [RIGHT]", "red") && socket.emit("finishGame", "P2 [RIGHT]", "red")
     }
 }
